@@ -33,6 +33,16 @@ class PasteroApp(ctk.CTk):
         self.line_numbers_frame = ctk.CTkFrame(self.text_container, fg_color="gray20")
         self.line_numbers_frame.pack(side="left", fill="y")
         
+        # Add line numbers with tooltip frame
+        self.tooltip = ctk.CTkLabel(
+            self.main_frame,
+            text="Click to copy line",
+            fg_color="gray30",
+            corner_radius=6,
+            padx=10,
+            pady=5
+        )
+        
         # Add line numbers
         self.line_numbers = ctk.CTkTextbox(
             self.line_numbers_frame,
@@ -119,9 +129,12 @@ class PasteroApp(ctk.CTk):
     
     def show_copy_cursor(self, event):
         self.line_numbers.configure(cursor="hand2")
+        self.tooltip.place(x=event.x_root - self.winfo_x() - 30, 
+                         y=event.y_root - self.winfo_y() + 20)
     
     def hide_copy_cursor(self, event):
         self.line_numbers.configure(cursor="")
+        self.tooltip.place_forget()
     
     def copy_line(self, event):
         # Get clicked line number
