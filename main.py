@@ -82,6 +82,19 @@ class PasteroApp(ctk.CTk):
             command=self.clear_text
         )
         self.clear_button.pack(side="left", padx=5)
+        
+        # Add status bar
+        self.status_bar = ctk.CTkLabel(
+            self.main_frame,
+            text="",
+            height=25,
+            font=("Arial", 12)
+        )
+        self.status_bar.pack(side="bottom", fill="x", pady=(10, 0))
+
+    def show_status(self, message, duration=2000):
+        self.status_bar.configure(text=message)
+        self.after(duration, lambda: self.status_bar.configure(text=""))
 
     def trim_text(self):
         text = self.text_area.get("1.0", "end-1c")
@@ -121,6 +134,7 @@ class PasteroApp(ctk.CTk):
         # Copy to clipboard
         self.clipboard_clear()
         self.clipboard_append(line)
+        self.show_status(f"Copied: {line[:50]}{'...' if len(line) > 50 else ''}")
 
 if __name__ == "__main__":
     app = PasteroApp()
