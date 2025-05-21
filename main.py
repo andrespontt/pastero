@@ -29,17 +29,26 @@ class PasteroApp(ctk.CTk):
         self.text_container = ctk.CTkFrame(self.main_frame)
         self.text_container.pack(pady=10)
         
+        # Add line numbers frame
+        self.line_numbers_frame = ctk.CTkFrame(self.text_container, fg_color="gray20")
+        self.line_numbers_frame.pack(side="left", fill="y")
+        
         # Add line numbers
         self.line_numbers = ctk.CTkTextbox(
-            self.text_container,
+            self.line_numbers_frame,
             width=30,
             height=400,
             font=("Arial", 14),
             fg_color="gray20",
             border_width=0
         )
-        self.line_numbers.pack(side="left", fill="y")
+        self.line_numbers.pack(fill="both", expand=True)
         self.line_numbers.configure(state="disabled")
+        
+        # Bind line numbers for copy functionality
+        self.line_numbers.bind("<Enter>", self.show_copy_cursor)
+        self.line_numbers.bind("<Leave>", self.hide_copy_cursor)
+        self.line_numbers.bind("<Button-1>", self.copy_line)
         
         # Add text area
         self.text_area = ctk.CTkTextbox(
@@ -94,6 +103,24 @@ class PasteroApp(ctk.CTk):
         
     def sync_scroll(self, event):
         self.line_numbers.yview_moveto(self.text_area.yview()[0])
+    
+    def show_copy_cursor(self, event):
+        self.line_numbers.configure(cursor="hand2")
+    
+    def hide_copy_cursor(self, event):
+        self.line_numbers.configure(cursor="")
+    
+    def copy_line(self, event):
+        # Get clicked line number
+        index = self.line_numbers.index(f"@{event.x},{event.y}")
+        line_num = int(index.split(".")[0])
+        
+        # Get and trim the corresponding line from text area
+        line = self.text_area.get(f"{line_num}.0", f"{line_num}.end").strip()
+        
+        # Copy to clipboard
+        self.clipboard_clear()
+        self.clipboard_append(line)
 
 if __name__ == "__main__":
     app = PasteroApp()
