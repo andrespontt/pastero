@@ -5,4 +5,5 @@ description = "Add your description here"
 requires-python = ">=3.13"
 dependencies = [
     "customtkinter>=5.2.2",
+    "pyinstaller>=6.13.0",
 ]

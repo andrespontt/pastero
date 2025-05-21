@@ -1,5 +1,10 @@
 
 import customtkinter as ctk
+import sys
+import os
+
+# Add version info
+__version__ = "1.0.0"
 
 class PasteroApp(ctk.CTk):
     def __init__(self):
